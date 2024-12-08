@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Edit Booking</h2>
+<form action="{{ url_for('edit_purchase', purchase_id=purchase.id) }}" method="POST">
+    <label for="place">Destination:</label>
+    <input type="text" id="place" name="place" value="{{ purchase.place }}" required>
+
+    <label for="package">Package:</label>
+    <select name="package" id="package">
+        <option value="premium" {% if purchase.package == 'premium' %}selected{% endif %}>Premium</option>
+        <option value="budget" {% if purchase.package == 'budget' %}selected{% endif %}>Budget</option>
+    </select>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" value="{{ purchase.date }}" required>
+
+    <button type="submit">Update Booking</button>
+</form>
+{% endblock %}

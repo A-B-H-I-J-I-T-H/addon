@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Welcome, {{ session['user'] }}</h2>
+<p>Choose your next destination:</p>
+<ul>
+    <li><a href="{{ url_for('destination', place='Paris') }}">Paris</a></li>
+    <li><a href="{{ url_for('destination', place='New York') }}">New York</a></li>
+    <li><a href="{{ url_for('destination', place='Tokyo') }}">Tokyo</a></li>
+</ul>
+
+<!-- Chatbot Section -->
+<h3>Your Travel Assistant Chat</h3>
+<div id="chat-container">
+    <div id="chat-box">
+        <!-- Chat messages will appear here -->
+    </div>
+    <form id="chat-form">
+        <input type="text" id="user-input" placeholder="Ask me anything about travel..." required>
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('user-input');
+    const chatBox = document.getElementById('chat-box');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const userMessage = input.value;
+        input.value = '';
+
+        // Display user's message
+        const userMessageElement = document.createElement('div');
+        userMessageElement.className = 'user-message';
+        userMessageElement.textContent = userMessage;
+        chatBox.appendChild(userMessageElement);
+
+        // Send message to server
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+        });
+        const data = await response.json();
+
+        // Display AI's response
+        const aiMessageElement = document.createElement('div');
+        aiMessageElement.className = 'ai-message';
+        if (data.reply) {
+            aiMessageElement.textContent = data.reply;
+        } else {
+            aiMessageElement.textContent = "Error: " + data.error;
+        }
+        chatBox.appendChild(aiMessageElement);
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+</script>
+
+<style>
+    #chat-container {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+    #chat-box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: 300px;
+        overflow-y: scroll;
+        margin-bottom: 10px;
+        background-color: #f9f9f9;
+    }
+    .user-message {
+        text-align: right;
+        margin: 5px 0;
+        padding: 8px;
+        background: #007BFF;
+        color: white;
+        border-radius: 10px;
+        display: inline-block;
+    }
+    .ai-message {
+        text-align: left;
+        margin: 5px 0;
+        padding: 8px;
+        background: #f1f1f1;
+        border-radius: 10px;
+        display: inline-block;
+    }
+    #chat-form {
+        display: flex;
+        gap: 10px;
+    }
+    #user-input {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #333;
+        background-color: #f9f9f9;
+        min-width: 80%;
+    }
+    button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    button:active {
+        background-color: #004080;
+    }
+</style>
+
+{% endblock %}

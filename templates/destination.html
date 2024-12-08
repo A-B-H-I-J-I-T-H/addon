@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Book your trip to {{ place }}</h2>
+<form action="{{ url_for('book') }}" method="POST">
+    <input type="hidden" name="place" value="{{ place }}">
+    <label for="package">Choose a package:</label>
+    <select name="package" id="package">
+        {% for name, price in packages.items() %}
+        <option value="{{ name }}">{{ name }} - ${{ price }}</option>
+        {% endfor %}
+    </select>
+    <label for="date">Select a date:</label>
+    <input type="date" name="date" required>
+    <button type="submit">Book Now</button>
+</form>
+{% endblock %}
