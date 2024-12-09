@@ -1,13 +1,15 @@
 from flask import Flask, render_template, redirect, jsonify, url_for, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import openai
-
+import os
+#from dotenv import load_dotenv
+#load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
-openai.api_key = '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'
+openai.api_key = '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'
 
 
 # Import models
